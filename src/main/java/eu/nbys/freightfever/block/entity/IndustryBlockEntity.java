@@ -44,6 +44,7 @@ public class IndustryBlockEntity extends BlockEntity {
     private int progress = 0;
     private int scanCooldown = 0;
     private int transferCooldown = 0;
+    private boolean ticked = false;
     private final Set<BlockPos> outPlatforms = new HashSet<>();
     private final Set<BlockPos> inPlatforms = new HashSet<>();
 
@@ -57,6 +58,11 @@ public class IndustryBlockEntity extends BlockEntity {
 
     private void tick(Level level, BlockPos pos) {
         IndustryRecipe recipe = currentRecipe();
+        if (!ticked) {
+            ticked = true;
+            FreightFever.LOGGER.info("Industry {} ticker online (recipe {}, factor x{}, progress {})", worldPosition,
+                    recipe == null ? "none" : recipe.id().toString(), String.format("%.2f", productionFactor), progress);
+        }
 
         if (--scanCooldown <= 0) {
             rescan(level, pos);
@@ -82,6 +88,7 @@ public class IndustryBlockEntity extends BlockEntity {
                     progress = effectiveTime;
                 }
             }
+            FreightFever.LOGGER.info("Industry {} completed a production cycle (recipe {})", worldPosition, recipe.id());
         }
     }
 
@@ -143,6 +150,7 @@ public class IndustryBlockEntity extends BlockEntity {
                 }
             }
         }
+        FreightFever.LOGGER.info("Industry {} scan linked {} OUT and {} IN platforms", worldPosition, outPlatforms.size(), inPlatforms.size());
     }
 
     private void unlinkIfPresent(Level level, BlockPos p) {
@@ -153,10 +161,18 @@ public class IndustryBlockEntity extends BlockEntity {
 
     private void transfer(Level level, BlockPos pos, IndustryRecipe recipe) {
         // push outputs to OUT platforms
+        int pushed = 0;
         for (BlockPos p : outPlatforms) {
             if (!level.hasChunkAt(p)) continue; // silent skip
             if (!(level.getBlockEntity(p) instanceof PlatformBlockEntity platform)) continue;
-            moveItems(output, platform.getContainer(), TRANSFER_LIMIT);
+            int moved = moveItems(output, platform.getContainer(), TRANSFER_LIMIT);
+            if (moved > 0) {
+                FreightFever.LOGGER.info("Industry {} pushed {} items to OUT platform {}", worldPosition, moved, p);
+                pushed += moved;
+            }
+        }
+        if (pushed == 0 && !output.getStackInSlot(0).isEmpty()) {
+            FreightFever.LOGGER.debug("Industry {} has buffered output but pushed nothing ({} OUT platforms)", worldPosition, outPlatforms.size());
         }
         // pull inputs from IN platforms
         if (recipe != null && !recipe.outputOnly()) {
