@@ -14,7 +14,8 @@ Demo chain shipped with the mod: iron mine -> steel mill -> town (bread + steel)
 
 ## Status
 
-M1 complete: core blocks, datapack loaders, demo chain. Roadmap: town levels, terminal UI, package compat testing.
+**pre-alpha 0.1** — first milestone: core blocks, datapack loaders, demo chain.
+Roadmap: pre-alpha 1.0 (town levels, management terminal), then train/package compatibility passes (Create, Loconautics).
 
 Author: **naebulys** — MIT license.
 
