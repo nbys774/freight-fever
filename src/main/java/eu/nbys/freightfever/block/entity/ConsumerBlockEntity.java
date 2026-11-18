@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import eu.nbys.freightfever.Config;
 import eu.nbys.freightfever.FreightFever;
 import eu.nbys.freightfever.block.ConsumerState;
 import eu.nbys.freightfever.block.PlatformMode;
@@ -24,7 +25,12 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 
 public class ConsumerBlockEntity extends BlockEntity {
-    public static final int SCAN_RADIUS = 8;
+    /**
+     * Consumer linking radius, in blocks, from the common config.
+     */
+    public static int scanRadius() {
+        return Config.CONSUMER_SCAN_RADIUS.get();
+    }
     public static final int SCAN_INTERVAL = 100;
     public static final int DECAY_INTERVAL = 100;
     public static final double SATISFACTION_PER_RATE = 10.0;
@@ -93,10 +99,11 @@ public class ConsumerBlockEntity extends BlockEntity {
         }
         inPlatforms.clear();
 
+        int radius = scanRadius();
         BlockPos.MutableBlockPos cursor = new BlockPos.MutableBlockPos();
-        for (int dx = -SCAN_RADIUS; dx <= SCAN_RADIUS; dx++) {
-            for (int dy = -SCAN_RADIUS; dy <= SCAN_RADIUS; dy++) {
-                for (int dz = -SCAN_RADIUS; dz <= SCAN_RADIUS; dz++) {
+        for (int dx = -radius; dx <= radius; dx++) {
+            for (int dy = -radius; dy <= radius; dy++) {
+                for (int dz = -radius; dz <= radius; dz++) {
                     cursor.set(pos.getX() + dx, pos.getY() + dy, pos.getZ() + dz);
                     if (level.getBlockEntity(cursor) instanceof PlatformBlockEntity platform
                             && platform.getMode() == PlatformMode.IN) {

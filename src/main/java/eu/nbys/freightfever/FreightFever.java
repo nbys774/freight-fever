@@ -96,6 +96,18 @@ public class FreightFever {
         modContainer.registerConfig(ModConfig.Type.COMMON, Config.SPEC);
     }
 
+    /**
+     * Activity logging gated by the debugLogging config: INFO when enabled,
+     * DEBUG (debug.log only) otherwise.
+     */
+    public static void debugLog(String message, Object... args) {
+        if (Config.DEBUG_LOGGING.get()) {
+            LOGGER.info(message, args);
+        } else {
+            LOGGER.debug(message, args);
+        }
+    }
+
     private void addReloadListeners(AddReloadListenerEvent event) {
         event.addListener(new IndustryReloadListener());
         event.addListener(new DemandReloadListener());

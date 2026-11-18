@@ -2,6 +2,7 @@ package eu.nbys.freightfever.block.entity;
 
 import java.util.HashSet;
 import java.util.Set;
+import eu.nbys.freightfever.Config;
 import eu.nbys.freightfever.FreightFever;
 import eu.nbys.freightfever.block.PlatformMode;
 import eu.nbys.freightfever.data.FreightData;
@@ -24,7 +25,12 @@ import net.neoforged.neoforge.items.ItemStackHandler;
 public class IndustryBlockEntity extends BlockEntity {
     public static final int INPUT_SLOTS = 9;
     public static final int OUTPUT_SLOTS = 9;
-    public static final int SCAN_RADIUS = 16;
+    /**
+     * Industry linking radius, in blocks, from the common config.
+     */
+    public static int scanRadius() {
+        return Config.INDUSTRY_SCAN_RADIUS.get();
+    }
     public static final int SCAN_INTERVAL = 100; // ticks
     public static final int TRANSFER_INTERVAL = 20; // ticks
     public static final int TRANSFER_LIMIT = 8; // items per cycle
@@ -73,7 +79,7 @@ public class IndustryBlockEntity extends BlockEntity {
         IndustryRecipe recipe = currentRecipe();
         if (!ticked) {
             ticked = true;
-            FreightFever.LOGGER.info("Industry {} ticker online (recipe {}, factor x{}, progress {})", worldPosition,
+            FreightFever.debugLog("Industry {} ticker online (recipe {}, factor x{}, progress {})", worldPosition,
                     recipe == null ? "none" : recipe.id().toString(), String.format("%.2f", productionFactor), progress);
             syncToClient();
         }
@@ -102,7 +108,7 @@ public class IndustryBlockEntity extends BlockEntity {
                     progress = effectiveTime;
                 }
             }
-            FreightFever.LOGGER.info("Industry {} completed a production cycle (recipe {})", worldPosition, recipe.id());
+            FreightFever.debugLog("Industry {} completed a production cycle (recipe {})", worldPosition, recipe.id());
         }
     }
 
@@ -150,10 +156,11 @@ public class IndustryBlockEntity extends BlockEntity {
         outPlatforms.clear();
         inPlatforms.clear();
 
+        int radius = scanRadius();
         BlockPos.MutableBlockPos cursor = new BlockPos.MutableBlockPos();
-        for (int dx = -SCAN_RADIUS; dx <= SCAN_RADIUS; dx++) {
-            for (int dy = -SCAN_RADIUS; dy <= SCAN_RADIUS; dy++) {
-                for (int dz = -SCAN_RADIUS; dz <= SCAN_RADIUS; dz++) {
+        for (int dx = -radius; dx <= radius; dx++) {
+            for (int dy = -radius; dy <= radius; dy++) {
+                for (int dz = -radius; dz <= radius; dz++) {
                     cursor.set(pos.getX() + dx, pos.getY() + dy, pos.getZ() + dz);
                     if (level.getBlockEntity(cursor) instanceof PlatformBlockEntity platform) {
                         PlatformMode mode = platform.getMode();
@@ -170,7 +177,7 @@ public class IndustryBlockEntity extends BlockEntity {
                 }
             }
         }
-        FreightFever.LOGGER.info("Industry {} scan linked {} OUT and {} IN platforms", worldPosition, outPlatforms.size(), inPlatforms.size());
+        FreightFever.debugLog("Industry {} scan linked {} OUT and {} IN platforms", worldPosition, outPlatforms.size(), inPlatforms.size());
     }
 
     private void unlinkIfPresent(Level level, BlockPos p) {
@@ -187,7 +194,7 @@ public class IndustryBlockEntity extends BlockEntity {
             if (!(level.getBlockEntity(p) instanceof PlatformBlockEntity platform)) continue;
             int moved = moveItems(output, platform.getContainer(), TRANSFER_LIMIT);
             if (moved > 0) {
-                FreightFever.LOGGER.info("Industry {} pushed {} items to OUT platform {}", worldPosition, moved, p);
+                FreightFever.debugLog("Industry {} pushed {} items to OUT platform {}", worldPosition, moved, p);
                 pushed += moved;
             }
         }
@@ -302,7 +309,7 @@ public class IndustryBlockEntity extends BlockEntity {
     public void rollProductionFactor() {
         this.productionFactor = 0.5 + level.getRandom().nextDouble() * 1.5;
         setChanged();
-        FreightFever.LOGGER.info("Industry at {} rolled production factor x{}", worldPosition, String.format("%.2f", productionFactor));
+        FreightFever.debugLog("Industry at {} rolled production factor x{}", worldPosition, String.format("%.2f", productionFactor));
     }
 
     public double getProductionFactor() {

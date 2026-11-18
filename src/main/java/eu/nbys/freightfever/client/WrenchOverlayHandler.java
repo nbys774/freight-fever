@@ -49,9 +49,9 @@ public final class WrenchOverlayHandler {
                         Vector3f color = "in".equals(platform.getLinkRole()) ? IN_COLOR : OUT_COLOR;
                         drawLink(mc, p, owner, color);
                     } else if (be instanceof IndustryBlockEntity industry) {
-                        drawRangeCircle(mc, industry.getBlockPos(), IndustryBlockEntity.SCAN_RADIUS, INDUSTRY_RANGE_COLOR);
+                        drawRangeCircle(mc, industry.getBlockPos(), IndustryBlockEntity.scanRadius(), INDUSTRY_RANGE_COLOR);
                     } else if (be instanceof ConsumerBlockEntity consumer) {
-                        drawRangeCircle(mc, consumer.getBlockPos(), ConsumerBlockEntity.SCAN_RADIUS, CONSUMER_RANGE_COLOR);
+                        drawRangeCircle(mc, consumer.getBlockPos(), ConsumerBlockEntity.scanRadius(), CONSUMER_RANGE_COLOR);
                     }
                 }
             }
