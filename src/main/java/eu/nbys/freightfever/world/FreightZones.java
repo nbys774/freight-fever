@@ -21,6 +21,11 @@ public final class FreightZones {
     }
 
     /** Canonical zone: opposite corners (min/max) at the same Y. */
+    /** A platform block may sit up to this many blocks above the post layer. */
+    public static final int PLATFORM_ABOVE = 2;
+    /** A platform block may sit up to this many blocks below the post layer. */
+    public static final int PLATFORM_BELOW = 4;
+
     public record Zone(BlockPos min, BlockPos max) {
         public String key() {
             return min.getX() + "," + min.getY() + "," + min.getZ() + "," + max.getX() + "," + max.getZ();
@@ -49,49 +54,57 @@ public final class FreightZones {
     public static Zone findZone(Level level, BlockPos pos) {
         if (level == null || level.isClientSide()) return null;
         int max = Math.max(2, Config.PLATFORM_MAX_SIDE.get());
-        int y = pos.getY();
+        int x0 = pos.getX() - max - 1;
+        int x1 = pos.getX() + max + 1;
+        int z0 = pos.getZ() - max - 1;
+        int z1 = pos.getZ() + max + 1;
+        BlockPos.MutableBlockPos cursor = new BlockPos.MutableBlockPos();
 
-        List<BlockPos> posts = new ArrayList<>();
-        BlockPos min = new BlockPos(pos.getX() - max - 1, y, pos.getZ() - max - 1);
-        BlockPos maxPos = new BlockPos(pos.getX() + max + 1, y, pos.getZ() + max + 1);
-        for (BlockPos p : BlockPos.betweenClosed(min, maxPos)) {
-            if (level.getBlockState(p).is(FreightFever.POST.get())) {
-                posts.add(p.immutable());
-            }
-        }
-        if (posts.size() < 4) {
-            if (!posts.isEmpty()) {
-                FreightFever.debugLog("[zone] {} post(s) around {} at y={} - a frame needs 4 corners",
-                        posts.size(), pos.toShortString(), y);
-            }
-            return null;
-        }
-
-        Set<Long> set = new HashSet<>();
-        for (BlockPos p : posts) set.add(p.asLong());
-
+        // The posts define the frame layer; a platform belongs to the zone when it
+        // sits inside the footprint between PLATFORM_BELOW blocks under and
+        // PLATFORM_ABOVE blocks above that layer.
+        int totalPosts = 0;
         Zone best = null;
         int bestArea = Integer.MAX_VALUE;
-        for (BlockPos a : posts) {
-            if (a.getX() >= pos.getX() || a.getZ() >= pos.getZ()) continue; // min corner candidates
-            for (BlockPos b : posts) {
-                if (b.getX() <= pos.getX() || b.getZ() <= pos.getZ()) continue; // max corner candidates
-                int w = b.getX() - a.getX();
-                int h = b.getZ() - a.getZ();
-                if (w < 2 || h < 2 || w > max || h > max) continue;
-                BlockPos c = new BlockPos(a.getX(), y, b.getZ());
-                BlockPos d = new BlockPos(b.getX(), y, a.getZ());
-                if (!set.contains(c.asLong()) || !set.contains(d.asLong())) continue;
-                int area = w * h;
-                if (area < bestArea) {
-                    bestArea = area;
-                    best = new Zone(a.immutable(), b.immutable());
+        for (int y = pos.getY() - PLATFORM_ABOVE; y <= pos.getY() + PLATFORM_BELOW; y++) {
+            List<BlockPos> posts = new ArrayList<>();
+            for (int x = x0; x <= x1; x++) {
+                for (int z = z0; z <= z1; z++) {
+                    cursor.set(x, y, z);
+                    if (level.getBlockState(cursor).is(FreightFever.POST.get())) {
+                        posts.add(new BlockPos(x, y, z));
+                    }
+                }
+            }
+            totalPosts += posts.size();
+            if (posts.size() < 4) continue;
+
+            Set<Long> set = new HashSet<>();
+            for (BlockPos p : posts) set.add(p.asLong());
+
+            for (BlockPos a : posts) {
+                if (a.getX() >= pos.getX() || a.getZ() >= pos.getZ()) continue; // min corner candidates
+                for (BlockPos b : posts) {
+                    if (b.getX() <= pos.getX() || b.getZ() <= pos.getZ()) continue; // max corner candidates
+                    int w = b.getX() - a.getX();
+                    int h = b.getZ() - a.getZ();
+                    if (w < 2 || h < 2 || w > max || h > max) continue;
+                    BlockPos c = new BlockPos(a.getX(), y, b.getZ());
+                    BlockPos d = new BlockPos(b.getX(), y, a.getZ());
+                    if (!set.contains(c.asLong()) || !set.contains(d.asLong())) continue;
+                    int area = w * h;
+                    if (area < bestArea) {
+                        bestArea = area;
+                        best = new Zone(new BlockPos(a.getX(), y, a.getZ()), new BlockPos(b.getX(), y, b.getZ()));
+                    }
                 }
             }
         }
-        if (best == null) {
-            FreightFever.debugLog("[zone] 4+ posts around {} (y={}) but no valid frame (same-height rectangle, sides 2..{})",
-                    pos.toShortString(), y, max);
+        if (best == null && totalPosts > 0) {
+            FreightFever.debugLog("[zone] {} post(s) in scan window around {} (y {}..{}) but no valid frame "
+                            + "(same-height rectangle, sides 2..{}; platforms may sit {} above or {} below the posts)",
+                    totalPosts, pos.toShortString(), pos.getY() - PLATFORM_ABOVE, pos.getY() + PLATFORM_BELOW,
+                    max, PLATFORM_ABOVE, PLATFORM_BELOW);
         }
         return best;
     }
@@ -100,10 +113,13 @@ public final class FreightZones {
     public static int countPlatforms(Level level, Zone zone) {
         if (zone == null) return 0;
         int count = 0;
-        for (int x = zone.min().getX() + 1; x < zone.max().getX(); x++) {
-            for (int z = zone.min().getZ() + 1; z < zone.max().getZ(); z++) {
-                if (level.getBlockState(new BlockPos(x, zone.min().getY(), z)).is(FreightFever.PLATFORM.get())) {
-                    count++;
+        int baseY = zone.min().getY();
+        for (int y = baseY - PLATFORM_BELOW; y <= baseY + PLATFORM_ABOVE; y++) {
+            for (int x = zone.min().getX() + 1; x < zone.max().getX(); x++) {
+                for (int z = zone.min().getZ() + 1; z < zone.max().getZ(); z++) {
+                    if (level.getBlockState(new BlockPos(x, y, z)).is(FreightFever.PLATFORM.get())) {
+                        count++;
+                    }
                 }
             }
         }
@@ -118,9 +134,8 @@ public final class FreightZones {
         if (level == null || level.isClientSide()) return;
         FreightFever.debugLog("[zone] post change at {}, poking platforms in range", changed.toShortString());
         int max = Math.max(2, Config.PLATFORM_MAX_SIDE.get()) + 1;
-        int y = changed.getY();
-        BlockPos min = new BlockPos(changed.getX() - max, y, changed.getZ() - max);
-        BlockPos maxPos = new BlockPos(changed.getX() + max, y, changed.getZ() + max);
+        BlockPos min = new BlockPos(changed.getX() - max, changed.getY() - PLATFORM_ABOVE, changed.getZ() - max);
+        BlockPos maxPos = new BlockPos(changed.getX() + max, changed.getY() + PLATFORM_BELOW, changed.getZ() + max);
         for (BlockPos p : BlockPos.betweenClosed(min, maxPos)) {
             if (level.getBlockState(p).is(FreightFever.PLATFORM.get())
                     && level.getBlockEntity(p) instanceof PlatformBlockEntity be) {
