@@ -26,11 +26,18 @@ public final class FreightZones {
             return min.getX() + "," + min.getY() + "," + min.getZ() + "," + max.getX() + "," + max.getZ();
         }
 
+        /** Parses a canonical 5-field key ("x1,y,z1,x2,z2"); null when unreadable. */
         public static Zone fromKey(String key) {
-            String[] parts = key.split(",");
-            return new Zone(
-                    new BlockPos(Integer.parseInt(parts[0]), Integer.parseInt(parts[1]), Integer.parseInt(parts[2])),
-                    new BlockPos(Integer.parseInt(parts[3]), Integer.parseInt(parts[4]), Integer.parseInt(parts[5])));
+            try {
+                String[] parts = key.split(",");
+                if (parts.length != 5) return null;
+                int y = Integer.parseInt(parts[1]);
+                BlockPos min = new BlockPos(Integer.parseInt(parts[0]), y, Integer.parseInt(parts[2]));
+                BlockPos max = new BlockPos(Integer.parseInt(parts[3]), y, Integer.parseInt(parts[4]));
+                return new Zone(min, max);
+            } catch (NumberFormatException e) {
+                return null;
+            }
         }
     }
 
@@ -81,6 +88,7 @@ public final class FreightZones {
 
     /** Number of platform blocks strictly inside the zone (capacity driver). */
     public static int countPlatforms(Level level, Zone zone) {
+        if (zone == null) return 0;
         int count = 0;
         for (int x = zone.min().getX() + 1; x < zone.max().getX(); x++) {
             for (int z = zone.min().getZ() + 1; z < zone.max().getZ(); z++) {

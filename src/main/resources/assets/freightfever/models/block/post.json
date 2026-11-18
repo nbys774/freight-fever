@@ -1,3 +1,33 @@
 {
-  "parent": "minecraft:block/oak_log"
+  "parent": "minecraft:block/block",
+  "textures": {
+    "shaft": "minecraft:block/oak_log",
+    "cap": "minecraft:block/oak_planks"
+  },
+  "elements": [
+    {
+      "from": [6, 0, 6],
+      "to": [10, 13, 10],
+      "faces": {
+        "down":  { "texture": "#shaft", "uv": [6, 0, 10, 4], "cullface": "down" },
+        "up":    { "texture": "#shaft", "uv": [6, 0, 10, 4] },
+        "north": { "texture": "#shaft", "uv": [6, 0, 10, 13] },
+        "south": { "texture": "#shaft", "uv": [6, 0, 10, 13] },
+        "west":  { "texture": "#shaft", "uv": [6, 0, 10, 13] },
+        "east":  { "texture": "#shaft", "uv": [6, 0, 10, 13] }
+      }
+    },
+    {
+      "from": [5, 13, 5],
+      "to": [11, 16, 11],
+      "faces": {
+        "down":  { "texture": "#shaft", "uv": [5, 5, 11, 11] },
+        "up":    { "texture": "#cap", "uv": [5, 5, 11, 11] },
+        "north": { "texture": "#cap", "uv": [5, 0, 11, 3] },
+        "south": { "texture": "#cap", "uv": [5, 0, 11, 3] },
+        "west":  { "texture": "#cap", "uv": [5, 0, 11, 3] },
+        "east":  { "texture": "#cap", "uv": [5, 0, 11, 3] }
+      }
+    }
+  ]
 }

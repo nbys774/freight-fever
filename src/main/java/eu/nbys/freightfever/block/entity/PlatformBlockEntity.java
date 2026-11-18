@@ -157,6 +157,17 @@ public class PlatformBlockEntity extends BlockEntity {
         return zoneFill;
     }
 
+    /** Canonical key of the active zone, mirrored on the client via the update tag. */
+    public String getZoneKey() {
+        return zoneKey;
+    }
+
+    /** Client-side zone bounds, or null when inactive / not yet synced. */
+    public FreightZones.Zone getClientZone() {
+        if (zoneKey == null || !zoneActive) return null;
+        return FreightZones.Zone.fromKey(zoneKey);
+    }
+
     // --- linking (unchanged semantics, now zone-gated) ---
 
     /** Debug logging of capability queries (hoppers etc.), throttled to once per second. */
@@ -216,6 +227,7 @@ public class PlatformBlockEntity extends BlockEntity {
             tag.putLong("LinkOwner", linkOwner.asLong());
             tag.putString("LinkRole", linkRole == null ? "" : linkRole);
         }
+        if (zoneKey != null) tag.putString("ZoneKey", zoneKey);
         tag.putBoolean("ZoneActive", zoneActive);
         tag.putFloat("ZoneFill", zoneFill);
         return tag;

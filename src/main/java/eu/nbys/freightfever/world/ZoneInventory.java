@@ -38,7 +38,9 @@ public class ZoneInventory implements Container {
 
     /** Maximum number of items this zone can hold right now. */
     public int capacity() {
-        int blocks = Math.max(0, FreightZones.countPlatforms(level, zone()));
+        FreightZones.Zone bounds = zone();
+        if (bounds == null) return 0;
+        int blocks = Math.max(0, FreightZones.countPlatforms(level, bounds));
         int perBlock = Math.max(1, Config.ITEMS_PER_PLATFORM_BLOCK.get());
         return blocks * perBlock;
     }
