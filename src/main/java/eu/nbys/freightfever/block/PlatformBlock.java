@@ -50,7 +50,8 @@ public class PlatformBlock extends BaseEntityBlock {
 
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> type) {
-        return null; // logic driven by linked Industry/Consumer
+        if (level.isClientSide()) return null;
+        return createTickerHelper(type, FreightFever.PLATFORM_BE.get(), PlatformBlockEntity::serverTick);
     }
 
     @Override

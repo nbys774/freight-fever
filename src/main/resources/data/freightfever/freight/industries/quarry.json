@@ -1,0 +1,9 @@
+{
+  "id": "freightfever:quarry",
+  "inputs": [],
+  "outputs": [
+    { "item": "minecraft:cobblestone", "amount": 1 }
+  ],
+  "processTimeTicks": 200,
+  "outputOnly": true
+}

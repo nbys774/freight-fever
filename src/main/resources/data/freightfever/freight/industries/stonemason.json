@@ -1,0 +1,11 @@
+{
+  "id": "freightfever:stonemason",
+  "inputs": [
+    { "item": "minecraft:cobblestone", "amount": 4 }
+  ],
+  "outputs": [
+    { "item": "minecraft:stone_bricks", "amount": 4 }
+  ],
+  "processTimeTicks": 300,
+  "outputOnly": false
+}

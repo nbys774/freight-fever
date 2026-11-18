@@ -106,7 +106,7 @@ public class ConsumerBlockEntity extends BlockEntity {
                 for (int dz = -radius; dz <= radius; dz++) {
                     cursor.set(pos.getX() + dx, pos.getY() + dy, pos.getZ() + dz);
                     if (level.getBlockEntity(cursor) instanceof PlatformBlockEntity platform
-                            && platform.getMode() == PlatformMode.IN) {
+                            && platform.getMode() == PlatformMode.IN && platform.isZoneActive()) {
                         if (platform.tryLink(pos, "in")) {
                             inPlatforms.add(cursor.immutable());
                         } else {

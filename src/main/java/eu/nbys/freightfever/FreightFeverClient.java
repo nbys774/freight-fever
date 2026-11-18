@@ -2,6 +2,7 @@ package eu.nbys.freightfever;
 
 import eu.nbys.freightfever.client.ConsumerBlockEntityRenderer;
 import eu.nbys.freightfever.client.IndustryBlockEntityRenderer;
+import eu.nbys.freightfever.client.PlatformBlockEntityRenderer;
 import eu.nbys.freightfever.client.WrenchOverlayHandler;
 import net.neoforged.neoforge.common.NeoForge;
 import net.minecraft.client.Minecraft;
@@ -32,6 +33,7 @@ public class FreightFeverClient {
     public static void onRegisterRenderers(EntityRenderersEvent.RegisterRenderers event) {
         event.registerBlockEntityRenderer(FreightFever.INDUSTRY_BE.get(), IndustryBlockEntityRenderer::new);
         event.registerBlockEntityRenderer(FreightFever.CONSUMER_BE.get(), ConsumerBlockEntityRenderer::new);
+        event.registerBlockEntityRenderer(FreightFever.PLATFORM_BE.get(), PlatformBlockEntityRenderer::new);
     }
 
     @SubscribeEvent

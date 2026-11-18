@@ -1,0 +1,11 @@
+{
+  "id": "freightfever:bakery",
+  "inputs": [
+    { "item": "minecraft:wheat", "amount": 3 }
+  ],
+  "outputs": [
+    { "item": "minecraft:bread", "amount": 1 }
+  ],
+  "processTimeTicks": 300,
+  "outputOnly": false
+}

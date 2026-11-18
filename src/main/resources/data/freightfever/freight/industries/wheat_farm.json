@@ -1,0 +1,9 @@
+{
+  "id": "freightfever:wheat_farm",
+  "inputs": [],
+  "outputs": [
+    { "item": "minecraft:wheat", "amount": 1 }
+  ],
+  "processTimeTicks": 300,
+  "outputOnly": true
+}

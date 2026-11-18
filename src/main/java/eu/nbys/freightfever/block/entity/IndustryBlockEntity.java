@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.Set;
 import eu.nbys.freightfever.Config;
 import eu.nbys.freightfever.FreightFever;
+import eu.nbys.freightfever.world.ZoneInventory;
 import eu.nbys.freightfever.block.PlatformMode;
 import eu.nbys.freightfever.data.FreightData;
 import eu.nbys.freightfever.data.IndustryRecipe;
@@ -163,6 +164,7 @@ public class IndustryBlockEntity extends BlockEntity {
                 for (int dz = -radius; dz <= radius; dz++) {
                     cursor.set(pos.getX() + dx, pos.getY() + dy, pos.getZ() + dz);
                     if (level.getBlockEntity(cursor) instanceof PlatformBlockEntity platform) {
+                        if (!platform.isZoneActive()) continue; // freight platforms only work inside a post-framed zone
                         PlatformMode mode = platform.getMode();
                         if (mode == PlatformMode.IN && !needsInput) continue; // output-only recipes never claim input platforms
                         String role = mode == PlatformMode.OUT ? "out" : "in";
@@ -255,6 +257,9 @@ public class IndustryBlockEntity extends BlockEntity {
     }
 
     private static ItemStack insertIntoContainer(net.minecraft.world.Container container, ItemStack stack) {
+        if (container instanceof ZoneInventory zoneInventory) {
+            return zoneInventory.addItem(stack); // capacity-aware shared zone storage
+        }
         ItemStack remainder = stack.copy();
         for (int slot = 0; slot < container.getContainerSize() && !remainder.isEmpty(); slot++) {
             ItemStack existing = container.getItem(slot);

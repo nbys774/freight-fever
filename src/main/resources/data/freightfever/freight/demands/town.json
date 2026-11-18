@@ -3,6 +3,9 @@
   "type": "town",
   "items": [
     { "item": "minecraft:bread", "rate": 1.0 },
-    { "item": "freightfever:steel_ingot", "rate": 0.5 }
+    { "item": "freightfever:steel_ingot", "rate": 0.5 },
+    { "item": "minecraft:oak_planks", "rate": 0.5 },
+    { "item": "minecraft:stone_bricks", "rate": 0.3 },
+    { "item": "minecraft:cooked_cod", "rate": 0.5 }
   ]
 }

@@ -1,0 +1,11 @@
+{
+  "id": "freightfever:sawmill",
+  "inputs": [
+    { "item": "minecraft:oak_log", "amount": 1 }
+  ],
+  "outputs": [
+    { "item": "minecraft:oak_planks", "amount": 4 }
+  ],
+  "processTimeTicks": 200,
+  "outputOnly": false
+}

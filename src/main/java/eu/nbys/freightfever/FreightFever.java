@@ -7,6 +7,7 @@ import com.mojang.logging.LogUtils;
 import eu.nbys.freightfever.block.ConsumerBlock;
 import eu.nbys.freightfever.block.IndustryBlock;
 import eu.nbys.freightfever.block.PlatformBlock;
+import eu.nbys.freightfever.block.PostBlock;
 import eu.nbys.freightfever.block.entity.ConsumerBlockEntity;
 import eu.nbys.freightfever.block.entity.IndustryBlockEntity;
 import eu.nbys.freightfever.block.entity.PlatformBlockEntity;
@@ -54,6 +55,9 @@ public class FreightFever {
             props -> new PlatformBlock(props.mapColor(MapColor.STONE).strength(2.0f).sound(SoundType.STONE)));
     public static final DeferredItem<BlockItem> PLATFORM_ITEM = ITEMS.registerSimpleBlockItem("platform", PLATFORM);
 
+    public static final DeferredBlock<PostBlock> POST = BLOCKS.registerBlock("post", PostBlock::new);
+    public static final DeferredItem<BlockItem> POST_ITEM = ITEMS.registerSimpleBlockItem("post", POST);
+
     public static final DeferredBlock<ConsumerBlock> CONSUMER = BLOCKS.registerBlock("consumer",
             props -> new ConsumerBlock(props.mapColor(MapColor.WOOD).strength(2.0f).sound(SoundType.WOOD)));
     public static final DeferredItem<BlockItem> CONSUMER_ITEM = ITEMS.registerSimpleBlockItem("consumer", CONSUMER);
@@ -80,6 +84,7 @@ public class FreightFever {
                 output.accept(CONSUMER_ITEM.get());
                 output.accept(STEEL_INGOT.get());
                 output.accept(WRENCH_ITEM.get());
+                output.accept(POST_ITEM.get());
             }).build());
 
     public FreightFever(IEventBus modEventBus, ModContainer modContainer) {

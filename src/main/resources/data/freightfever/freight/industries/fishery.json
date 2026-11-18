@@ -1,0 +1,9 @@
+{
+  "id": "freightfever:fishery",
+  "inputs": [],
+  "outputs": [
+    { "item": "minecraft:cod", "amount": 1 }
+  ],
+  "processTimeTicks": 800,
+  "outputOnly": true
+}

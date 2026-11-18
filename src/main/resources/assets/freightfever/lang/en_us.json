@@ -7,5 +7,6 @@
   "item.freightfever.wrench": "Freight Wrench",
   "block.freightfever.platform.mode": "Platform mode: %s",
   "block.freightfever.industry.info": "Recipe: %s | Production factor: x%s",
-  "block.freightfever.consumer.info": "Demand: %s | %s"
+  "block.freightfever.consumer.info": "Demand: %s | %s",
+  "block.freightfever.post": "Freight Post"
 }

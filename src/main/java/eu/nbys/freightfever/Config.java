@@ -23,6 +23,16 @@ public class Config {
                     "Platforms in this radius feed the consumer and can be shared with others.")
             .defineInRange("consumerScanRadius", 8, 1, 64);
 
+    public static final ModConfigSpec.IntValue PLATFORM_MAX_SIDE = BUILDER
+            .comment("Maximum side length, in blocks, of a freight platform zone (4 corner posts).",
+                    "Each side must be between 2 and this value.")
+            .defineInRange("platformMaxSide", 8, 2, 16);
+
+    public static final ModConfigSpec.IntValue ITEMS_PER_PLATFORM_BLOCK = BUILDER
+            .comment("Storage capacity, in individual items, contributed by each Platform block",
+                    "inside a freight platform zone. Total zone capacity = this x platform block count.")
+            .defineInRange("itemsPerPlatformBlock", 8, 1, 64);
+
     public static final ModConfigSpec.BooleanValue DEBUG_LOGGING = BUILDER
             .comment("Verbose INFO logging of industry and consumer activity (ticker, scans, pushes, rolled factors).",
                     "When false, those messages still go to debug.log at DEBUG level.")
