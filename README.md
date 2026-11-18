@@ -1,25 +1,23 @@
+# Freight Fever
 
-Installation information
-=======
+Production and demand chains, Transport Fever style, for Minecraft **NeoForge 1.21.1**.
 
-This template repository can be directly cloned to get you started with a new
-mod. Simply create a new repository cloned from this one, by following the
-instructions provided by [GitHub](https://docs.github.com/en/repositories/creating-and-managing-repositories/creating-a-repository-from-a-template).
+The mod itself never moves items between districts: **transport is entirely up to you**. It works with Create trains and packages, with plain vanilla chest minecarts and hoppers, or by hand. Optional compat with **Create** (tested with Create 6.x) and **Create: Loconautics** (sub-level trains).
 
-Once you have your clone, simply open the repository in the IDE of your choice. The usual recommendation for an IDE is either IntelliJ IDEA or Eclipse.
+## Blocks
 
-If at any point you are missing libraries in your IDE, or you've run into problems you can
-run `gradlew --refresh-dependencies` to refresh the local cache. `gradlew clean` to reset everything 
-{this does not affect your code} and then start the process again.
+- **Industry** — a producer with input/output buffers, recipes loaded from the datapack (data/freightfever/freight/industries/*.json), output-only variants (farms, mines), and a random **production factor** (0.5x to 2x) rolled at placement.
+- **Platform** — the freight interface. 18-slot inventory, IN or OUT mode (sneak + right-click). OUT: anyone may extract. IN: anyone may insert. Industries link to platforms in a 16-block radius (consumers: 8).
+- **Consumer** — towns and other demand sinks, satisfaction gauges per item, datapack-driven demands (data/freightfever/freight/demands/*.json). Satisfied consumers grow.
 
-Mapping Names:
-============
-By default, the MDK is configured to use the official mapping names from Mojang for methods and fields 
-in the Minecraft codebase. These names are covered by a specific license. All modders should be aware of this
-license. For the latest license text, refer to the mapping file itself, or the reference copy here:
-https://github.com/NeoForged/NeoForm/blob/main/Mojang.md
+Demo chain shipped with the mod: iron mine -> steel mill -> town (bread + steel).
 
-Additional Resources: 
-==========
-Community Documentation: https://docs.neoforged.net/  
-NeoForged Discord: https://discord.neoforged.net/
+## Status
+
+M1 complete: core blocks, datapack loaders, demo chain. Roadmap: town levels, terminal UI, package compat testing.
+
+Author: **naebulys** — MIT license.
+
+## Testing
+
+See docs/testing.md for the full walkthrough. Quick start: scripts/run-client.sh starts a Minecraft 1.21.1 dev client with the mod loaded, scripts/run-server.sh is the headless smoke test, and scripts/build-jar.sh [mods-dir] builds the jar (optionally copying it into a mods folder).
