@@ -3,11 +3,14 @@ package eu.nbys.freightfever.client;
 import org.joml.Vector3f;
 
 import eu.nbys.freightfever.FreightFever;
+import eu.nbys.freightfever.block.entity.ConsumerBlockEntity;
+import eu.nbys.freightfever.block.entity.IndustryBlockEntity;
 import eu.nbys.freightfever.block.entity.PlatformBlockEntity;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.DustParticleOptions;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.client.event.ClientTickEvent;
 
@@ -17,6 +20,8 @@ public final class WrenchOverlayHandler {
     private static final int EVERY_TICKS = 5;
     private static final Vector3f OUT_COLOR = new Vector3f(1.0f, 0.55f, 0.15f); // production output
     private static final Vector3f IN_COLOR = new Vector3f(0.25f, 0.75f, 1.0f); // input consumption
+    private static final Vector3f INDUSTRY_RANGE_COLOR = new Vector3f(0.8f, 0.4f, 1.0f); // violet: industry scan radius
+    private static final Vector3f CONSUMER_RANGE_COLOR = new Vector3f(0.4f, 0.9f, 0.3f); // lime: consumer scan radius
 
     private WrenchOverlayHandler() {}
 
@@ -36,14 +41,32 @@ public final class WrenchOverlayHandler {
         for (int x = -RADIUS; x <= RADIUS; x++) {
             for (int y = -RADIUS; y <= RADIUS; y++) {
                 for (int z = -RADIUS; z <= RADIUS; z++) {
-                    if (mc.level.getBlockEntity(center.offset(x, y, z)) instanceof PlatformBlockEntity platform) {
+                    BlockPos p = center.offset(x, y, z);
+                    BlockEntity be = mc.level.getBlockEntity(p);
+                    if (be instanceof PlatformBlockEntity platform) {
                         BlockPos owner = platform.getLinkOwner();
                         if (owner == null) continue;
                         Vector3f color = "in".equals(platform.getLinkRole()) ? IN_COLOR : OUT_COLOR;
-                        drawLink(mc, center.offset(x, y, z), owner, color);
+                        drawLink(mc, p, owner, color);
+                    } else if (be instanceof IndustryBlockEntity industry) {
+                        drawRangeCircle(mc, industry.getBlockPos(), IndustryBlockEntity.SCAN_RADIUS, INDUSTRY_RANGE_COLOR);
+                    } else if (be instanceof ConsumerBlockEntity consumer) {
+                        drawRangeCircle(mc, consumer.getBlockPos(), ConsumerBlockEntity.SCAN_RADIUS, CONSUMER_RANGE_COLOR);
                     }
                 }
             }
+        }
+    }
+
+    /** Draws a flat particle ring of the given block scan radius, one particle per world unit of circumference. */
+    private static void drawRangeCircle(Minecraft mc, BlockPos center, int radius, Vector3f color) {
+        if (mc.level == null) return;
+        int steps = Math.max(16, (int) (2 * Math.PI * radius));
+        for (int s = 0; s < steps; s++) {
+            double theta = 2 * Math.PI * s / steps;
+            double px = center.getX() + 0.5 + radius * Math.cos(theta);
+            double pz = center.getZ() + 0.5 + radius * Math.sin(theta);
+            mc.level.addParticle(new DustParticleOptions(color, 1.0f), px, center.getY() + 0.5, pz, 0.0, 0.002, 0.0);
         }
     }
 
