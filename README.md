@@ -14,7 +14,7 @@ Demo chain shipped with the mod: iron mine -> steel mill -> town (bread + steel)
 
 ## Status
 
-**pre-alpha 0.2 (0.2.0-pre-alpha)** — first milestone: core blocks, datapack loaders, demo chain.
+**pre-alpha 0.2 (0.2.1-pre-alpha)** — first milestone: core blocks, datapack loaders, demo chain.
 Roadmap: pre-alpha 1.0 (town levels, management terminal), then train/package compatibility passes (Create, Loconautics).
 
 Author: **naebulys** — MIT license.

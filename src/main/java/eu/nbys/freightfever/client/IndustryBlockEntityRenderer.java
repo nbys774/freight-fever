@@ -11,6 +11,8 @@ import eu.nbys.freightfever.data.FreightData;
 import eu.nbys.freightfever.data.IndustryRecipe;
 import eu.nbys.freightfever.data.ItemAmount;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.LevelRenderer;
+import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
@@ -27,8 +29,8 @@ import net.minecraft.world.item.Items;
  * output-only recipes show their product, transforming recipes show inputs, an arrow, then outputs.
  */
 public class IndustryBlockEntityRenderer implements BlockEntityRenderer<IndustryBlockEntity> {
-    private static final float SPACING = 0.45f;
-    private static final float SCALE = 0.4f;
+    private static final float SPACING = 0.55f;
+    private static final float SCALE = 0.65f;
     private static final float HEIGHT = 1.35f;
 
     public IndustryBlockEntityRenderer(BlockEntityRendererProvider.Context context) {}
@@ -52,13 +54,18 @@ public class IndustryBlockEntityRenderer implements BlockEntityRenderer<Industry
 
         float bob = 0.06f * Mth.sin(time / 9.0f);
         float startX = -(row.size() - 1) * SPACING / 2.0f;
+        // sample light where the items float: inside the opaque block itself it is always 0
+        int light = LightTexture.FULL_BRIGHT;
+        if (be.getLevel() != null) {
+            light = LevelRenderer.getLightColor(be.getLevel(), be.getBlockPos().above());
+        }
         ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
         for (int i = 0; i < row.size(); i++) {
             pose.pushPose();
-            pose.translate(startX + i * SPACING, HEIGHT + bob, 0.5f);
+            pose.translate(0.5f + startX + i * SPACING, HEIGHT + bob, 0.5f); // 0.5 in x centers the row on the block
             pose.mulPose(Axis.YP.rotationDegrees(time * 2.0f));
             pose.scale(SCALE, SCALE, SCALE);
-            itemRenderer.renderStatic(row.get(i), ItemDisplayContext.GROUND, packedLight, OverlayTexture.NO_OVERLAY, pose, buffer, be.getLevel(), 0);
+            itemRenderer.renderStatic(row.get(i), ItemDisplayContext.GROUND, light, OverlayTexture.NO_OVERLAY, pose, buffer, be.getLevel(), 0);
             pose.popPose();
         }
     }
