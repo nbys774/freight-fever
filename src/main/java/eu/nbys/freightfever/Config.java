@@ -1,4 +1,4 @@
-package com.example.examplemod;
+package eu.nbys.freightfever;
 
 import java.util.List;
 import java.util.Set;

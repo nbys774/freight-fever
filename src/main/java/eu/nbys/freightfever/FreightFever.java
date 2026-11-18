@@ -1,4 +1,4 @@
-package com.example.examplemod;
+package eu.nbys.freightfever;
 
 import org.slf4j.Logger;
 

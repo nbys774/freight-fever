@@ -1,0 +1,13 @@
+{
+  "itemGroup.examplemod": "Example Mod Tab",
+  "block.examplemod.example_block": "Example Block",
+  "item.examplemod.example_item": "Example Item",
+
+  "freightfever.configuration.title": "Example Mod Configs",
+  "freightfever.configuration.section.examplemod.common.toml": "Example Mod Configs",
+  "freightfever.configuration.section.examplemod.common.toml.title": "Example Mod Configs",
+  "freightfever.configuration.items": "Item List",
+  "freightfever.configuration.logDirtBlock": "Log Dirt Block",
+  "freightfever.configuration.magicNumberIntroduction": "Magic Number Text",
+  "freightfever.configuration.magicNumber": "Magic Number"
+}
