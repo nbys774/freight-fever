@@ -135,6 +135,8 @@ public class IndustryBlockEntity extends BlockEntity {
     }
 
     private void rescan(Level level, BlockPos pos) {
+        IndustryRecipe recipe = currentRecipe();
+        boolean needsInput = recipe == null || !recipe.outputOnly();
         // release previous links owned by us
         for (BlockPos p : outPlatforms) unlinkIfPresent(level, p);
         for (BlockPos p : inPlatforms) unlinkIfPresent(level, p);
@@ -148,6 +150,7 @@ public class IndustryBlockEntity extends BlockEntity {
                     cursor.set(pos.getX() + dx, pos.getY() + dy, pos.getZ() + dz);
                     if (level.getBlockEntity(cursor) instanceof PlatformBlockEntity platform) {
                         PlatformMode mode = platform.getMode();
+                        if (mode == PlatformMode.IN && !needsInput) continue; // output-only recipes never claim input platforms
                         String role = mode == PlatformMode.OUT ? "out" : "in";
                         if (platform.tryLink(pos, role)) {
                             if (mode == PlatformMode.OUT) outPlatforms.add(cursor.immutable());
