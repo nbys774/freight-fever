@@ -8,6 +8,7 @@ import net.minecraft.core.NonNullList;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.item.ItemStack;
 
 /**
@@ -104,6 +105,20 @@ public class ZoneInventory implements Container {
     /** Raw slot access used by the SavedData loader. Bypasses capacity. */
     public void rawAdd(ItemStack stack) {
         if (!stack.isEmpty()) stacks.add(stack);
+    }
+
+    /** Registry id of the most stacked item, used by the client to pick a cargo texture. */
+    public String dominantItemKey() {
+        ItemStack best = null;
+        int bestCount = -1;
+        for (ItemStack stack : stacks) {
+            if (stack.isEmpty()) continue;
+            if (stack.getCount() > bestCount) {
+                bestCount = stack.getCount();
+                best = stack;
+            }
+        }
+        return best == null ? null : BuiltInRegistries.ITEM.getKey(best.getItem()).toString();
     }
 
     public List<ItemStack> contents() {

@@ -7,6 +7,8 @@ import eu.nbys.freightfever.block.PlatformMode;
 import eu.nbys.freightfever.world.FreightPlatformData;
 import eu.nbys.freightfever.world.FreightZones;
 import eu.nbys.freightfever.world.ZoneInventory;
+import java.util.Objects;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
@@ -61,6 +63,8 @@ public class PlatformBlockEntity extends BlockEntity {
     private boolean zoneActive = false;
     /** Server feed + client mirror of the zone fill ratio (0..1). */
     private float zoneFill = 0.0f;
+    /** Server feed + client mirror of the dominant stored item (cargo texture picker). */
+    private String zoneItem = null;
     private int zoneRefreshCooldown = 0;
 
     public PlatformBlockEntity(BlockPos pos, BlockState state) {
@@ -79,9 +83,12 @@ public class PlatformBlockEntity extends BlockEntity {
             refreshZone();
         }
         if (zoneActive && level.getGameTime() % 10 == 0) {
-            float fill = currentFill();
-            if (Math.abs(fill - zoneFill) > 0.02f) {
+            ZoneInventory inventory = activeZoneInventory();
+            String item = inventory == null ? null : inventory.dominantItemKey();
+            float fill = inventory == null ? 0.0f : inventory.fill();
+            if (Math.abs(fill - zoneFill) > 0.02f || !Objects.equals(item, zoneItem)) {
                 zoneFill = fill;
+                zoneItem = item;
                 syncToClient();
             }
         }
@@ -145,6 +152,13 @@ public class PlatformBlockEntity extends BlockEntity {
         }
     }
 
+    private ZoneInventory activeZoneInventory() {
+        if (zoneActive && zone != null && level instanceof ServerLevel serverLevel) {
+            return FreightPlatformData.zoneInventory(serverLevel, zone);
+        }
+        return null;
+    }
+
     private float currentFill() {
         if (zoneActive && zone != null && level instanceof ServerLevel serverLevel) {
             return FreightPlatformData.zoneInventory(serverLevel, zone).fill();
@@ -163,6 +177,11 @@ public class PlatformBlockEntity extends BlockEntity {
     /** Canonical key of the active zone, mirrored on the client via the update tag. */
     public String getZoneKey() {
         return zoneKey;
+    }
+
+    /** Registry id of the dominant stored item (client cargo texture picker). */
+    public String getZoneItem() {
+        return zoneItem;
     }
 
     /** Client-side zone bounds, or null when inactive / not yet synced. */
@@ -231,6 +250,7 @@ public class PlatformBlockEntity extends BlockEntity {
             tag.putString("LinkRole", linkRole == null ? "" : linkRole);
         }
         if (zoneKey != null) tag.putString("ZoneKey", zoneKey);
+        if (zoneItem != null) tag.putString("ZoneItem", zoneItem);
         tag.putBoolean("ZoneActive", zoneActive);
         tag.putFloat("ZoneFill", zoneFill);
         return tag;
@@ -392,6 +412,9 @@ public class PlatformBlockEntity extends BlockEntity {
         }
         if (tag.contains("ZoneFill")) {
             zoneFill = tag.getFloat("ZoneFill");
+        }
+        if (tag.contains("ZoneItem")) {
+            zoneItem = tag.getString("ZoneItem");
         }
     }
 }
