@@ -97,6 +97,7 @@ public class PlatformBlockEntity extends BlockEntity {
         FreightZones.Zone found = FreightZones.findZone(level, worldPosition);
         if (found == null) {
             if (zoneKey != null) {
+                FreightFever.debugLog("[platform] zone LOST at {}", worldPosition.toShortString());
                 // zone disband: drop the leftover shared items once, then go inert
                 FreightPlatformData.disband((ServerLevel) level, zoneKey, worldPosition);
                 zoneKey = null;
@@ -120,6 +121,8 @@ public class PlatformBlockEntity extends BlockEntity {
         zone = found;
         zoneKey = newKey;
         zoneActive = true;
+        FreightFever.debugLog("[platform] zone ACTIVATED at {}: {} .. {}", worldPosition.toShortString(),
+                found.min().toShortString(), found.max().toShortString());
         zoneFill = currentFill();
         migrateLegacyItems();
         setChanged();

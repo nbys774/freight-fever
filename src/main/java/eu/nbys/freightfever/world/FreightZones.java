@@ -59,7 +59,13 @@ public final class FreightZones {
                 posts.add(p.immutable());
             }
         }
-        if (posts.size() < 4) return null;
+        if (posts.size() < 4) {
+            if (!posts.isEmpty()) {
+                FreightFever.debugLog("[zone] {} post(s) around {} at y={} - a frame needs 4 corners",
+                        posts.size(), pos.toShortString(), y);
+            }
+            return null;
+        }
 
         Set<Long> set = new HashSet<>();
         for (BlockPos p : posts) set.add(p.asLong());
@@ -82,6 +88,10 @@ public final class FreightZones {
                     best = new Zone(a.immutable(), b.immutable());
                 }
             }
+        }
+        if (best == null) {
+            FreightFever.debugLog("[zone] 4+ posts around {} (y={}) but no valid frame (same-height rectangle, sides 2..{})",
+                    pos.toShortString(), y, max);
         }
         return best;
     }
@@ -106,6 +116,7 @@ public final class FreightZones {
      */
     public static void pokePlatformsAround(Level level, BlockPos changed) {
         if (level == null || level.isClientSide()) return;
+        FreightFever.debugLog("[zone] post change at {}, poking platforms in range", changed.toShortString());
         int max = Math.max(2, Config.PLATFORM_MAX_SIDE.get()) + 1;
         int y = changed.getY();
         BlockPos min = new BlockPos(changed.getX() - max, y, changed.getZ() - max);
