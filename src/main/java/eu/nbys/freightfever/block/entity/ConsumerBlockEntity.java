@@ -108,6 +108,7 @@ public class ConsumerBlockEntity extends BlockEntity {
 
     private void consume(Level level, Demand demand) {
         for (Demand.DemandItem demandItem : demand.items()) {
+            satisfaction.putIfAbsent(demandItem.item(), 0.0); // track gauges from the start, even with no platforms linked
             double sat = satisfaction.getOrDefault(demandItem.item(), 0.0);
             if (sat >= 100.0) continue;
             for (BlockPos p : inPlatforms) {
@@ -149,7 +150,8 @@ public class ConsumerBlockEntity extends BlockEntity {
     }
 
     public String describeSatisfaction() {
-        if (satisfaction.isEmpty()) return "no demand loaded";
+        if (demandId == null) return "no demand loaded";
+        if (satisfaction.isEmpty()) return "satisfaction: 0";
         StringBuilder sb = new StringBuilder("satisfaction: ");
         satisfaction.forEach((item, sat) -> sb.append(item.toString()).append('=').append(String.format("%.0f", sat)).append(' '));
         return sb.toString().trim();
