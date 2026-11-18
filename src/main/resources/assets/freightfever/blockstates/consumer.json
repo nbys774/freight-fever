@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "state=hungry": { "model": "freightfever:block/consumer_hungry" },
+    "state=average": { "model": "freightfever:block/consumer_average" },
+    "state=satisfied": { "model": "freightfever:block/consumer_satisfied" }
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "variants": {
+    "mode=in": { "model": "freightfever:block/platform_in" },
+    "mode=out": { "model": "freightfever:block/platform_out" }
+  }
+}

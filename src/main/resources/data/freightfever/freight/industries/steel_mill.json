@@ -1,0 +1,11 @@
+{
+  "id": "freightfever:steel_mill",
+  "inputs": [
+    { "item": "minecraft:iron_ingot", "amount": 2 }
+  ],
+  "outputs": [
+    { "item": "freightfever:steel_ingot", "amount": 1 }
+  ],
+  "processTimeTicks": 400,
+  "outputOnly": false
+}

@@ -1,13 +1,11 @@
 {
-  "itemGroup.examplemod": "Example Mod Tab",
-  "block.examplemod.example_block": "Example Block",
-  "item.examplemod.example_item": "Example Item",
-
-  "freightfever.configuration.title": "Example Mod Configs",
-  "freightfever.configuration.section.examplemod.common.toml": "Example Mod Configs",
-  "freightfever.configuration.section.examplemod.common.toml.title": "Example Mod Configs",
-  "freightfever.configuration.items": "Item List",
-  "freightfever.configuration.logDirtBlock": "Log Dirt Block",
-  "freightfever.configuration.magicNumberIntroduction": "Magic Number Text",
-  "freightfever.configuration.magicNumber": "Magic Number"
+  "itemGroup.freightfever": "Freight Fever",
+  "block.freightfever.industry": "Industry",
+  "block.freightfever.platform": "Platform",
+  "block.freightfever.consumer": "Consumer",
+  "item.freightfever.steel_ingot": "Steel Ingot",
+  "block.freightfever.platform.mode": "Platform mode: %s",
+  "block.freightfever.industry.recipe": "Industry recipe: %s",
+  "block.freightfever.industry.factor": "Production factor: x%s",
+  "block.freightfever.consumer.demand": "Consumer demand: %s"
 }

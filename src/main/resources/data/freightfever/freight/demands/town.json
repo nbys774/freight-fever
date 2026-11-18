@@ -1,0 +1,8 @@
+{
+  "id": "freightfever:town",
+  "type": "town",
+  "items": [
+    { "item": "minecraft:bread", "rate": 1.0 },
+    { "item": "freightfever:steel_ingot", "rate": 0.5 }
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "id": "freightfever:iron_mine",
+  "inputs": [],
+  "outputs": [
+    { "item": "minecraft:iron_ingot", "amount": 1 }
+  ],
+  "processTimeTicks": 200,
+  "outputOnly": true
+}
