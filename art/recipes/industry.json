@@ -4,5 +4,8 @@
   "palette": "industrial_metal",
   "seed": 1001,
   "target": "block/industry",
-  "options": { "accent": "#e8c832" }
+  "options": {
+    "accent": "#a06ae6",
+    "trims": "#a06ae6"
+  }
 }

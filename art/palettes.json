@@ -96,5 +96,12 @@
     "light": "#33363f",
     "detail": "#0d0e12",
     "edge": "#000000"
+  },
+  "creative_violet": {
+    "base": "#7a4fae",
+    "shade": "#5a3580",
+    "light": "#a86fdd",
+    "detail": "#3f2660",
+    "edge": "#2b1840"
   }
 }

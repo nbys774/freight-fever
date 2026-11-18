@@ -101,6 +101,22 @@ def pattern_metal_plate(recipe, pal, rng):
     return img
 
 
+def draw_corner_trims(px, color):
+    """3-px L-shaped corner brackets (creative-tier charter, Create style)."""
+    c = color + (255,)
+    last = SIZE - 1
+    corners = [
+        (0, 0, 1, 1),
+        (last, 0, -1, 1),
+        (0, last, 1, -1),
+        (last, last, -1, -1),
+    ]
+    for cx, cy, dx, dy in corners:
+        for i in range(3):
+            px[cx + dx * i, cy] = c
+            px[cx, cy + dy * i] = c
+
+
 def pattern_machine_casing(recipe, pal, rng):
     img, px = new_canvas(pal)
     noise_overlay(px, rng, pal, amount=0.15)
@@ -123,6 +139,8 @@ def pattern_machine_casing(recipe, pal, rng):
     # ventilation grille on the right strip
     for y in range(4, 12):
         px[13, y] = accent + (255,) if (y % 2 == 0) else pal["detail"] + (255,)
+    if "trims" in opts:
+        draw_corner_trims(px, hex_to_rgb(opts["trims"]))
     return img
 
 
@@ -208,6 +226,9 @@ def pattern_gauge(recipe, pal, rng):
     for x in range(2, 2 + filled):
         px[x, 5] = fill_light + (255,)
     shade_edges(px, pal)
+    opts2 = recipe.get("options", {})
+    if "trims" in opts2:
+        draw_corner_trims(px, hex_to_rgb(opts2["trims"]))
     return img
 
 
