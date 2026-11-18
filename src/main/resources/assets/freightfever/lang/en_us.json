@@ -5,7 +5,6 @@
   "block.freightfever.consumer": "Consumer",
   "item.freightfever.steel_ingot": "Steel Ingot",
   "block.freightfever.platform.mode": "Platform mode: %s",
-  "block.freightfever.industry.recipe": "Industry recipe: %s",
-  "block.freightfever.industry.factor": "Production factor: x%s",
-  "block.freightfever.consumer.demand": "Consumer demand: %s"
+  "block.freightfever.industry.info": "Recipe: %s | Production factor: x%s",
+  "block.freightfever.consumer.info": "Demand: %s | %s"
 }

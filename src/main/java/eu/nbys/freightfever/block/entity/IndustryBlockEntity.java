@@ -266,7 +266,7 @@ public class IndustryBlockEntity extends BlockEntity {
     public void rollProductionFactor() {
         this.productionFactor = 0.5 + level.getRandom().nextDouble() * 1.5;
         setChanged();
-        FreightFever.LOGGER.info("Industry at {} rolled production factor x{:.2f}", worldPosition, productionFactor);
+        FreightFever.LOGGER.info("Industry at {} rolled production factor x{}", worldPosition, String.format("%.2f", productionFactor));
     }
 
     public double getProductionFactor() {

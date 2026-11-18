@@ -73,9 +73,8 @@ public class ConsumerBlock extends BaseEntityBlock {
                 }
                 Demand next = demands.get((idx + 1) % demands.size());
                 be.setDemandId(next.id());
-                player.displayClientMessage(Component.translatable("block.freightfever.consumer.demand", next.id().toString()), true);
             }
-            player.displayClientMessage(Component.literal(be.describeSatisfaction()), true);
+            player.displayClientMessage(Component.translatable("block.freightfever.consumer.info", be.getDemandId().toString(), be.describeSatisfaction()), true);
             return InteractionResult.CONSUME;
         }
         return InteractionResult.PASS;

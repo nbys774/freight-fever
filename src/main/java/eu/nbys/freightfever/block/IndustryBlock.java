@@ -74,9 +74,8 @@ public class IndustryBlock extends BaseEntityBlock {
                 }
                 IndustryRecipe next = recipes.get((idx + 1) % recipes.size());
                 be.setRecipeId(next.id());
-                player.displayClientMessage(Component.translatable("block.freightfever.industry.recipe", next.id().toString()), true);
             }
-            player.displayClientMessage(Component.translatable("block.freightfever.industry.factor", String.format("%.2f", be.getProductionFactor())), true);
+            player.displayClientMessage(Component.translatable("block.freightfever.industry.info", be.getRecipeId().toString(), String.format("%.2f", be.getProductionFactor())), true);
             return InteractionResult.CONSUME;
         }
         return InteractionResult.PASS;
