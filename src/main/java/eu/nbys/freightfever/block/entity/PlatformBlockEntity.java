@@ -133,8 +133,16 @@ public class PlatformBlockEntity extends BlockEntity {
             @Override
             public ItemStack extractItem(int slot, int amount, boolean simulate) {
                 if (getMode() == PlatformMode.IN) return ItemStack.EMPTY; // extraction refused via capability
+                if (simulate) {
+                    // peek only: a simulated extraction must never mutate the container
+                    ItemStack stack = container.getItem(slot);
+                    if (stack.isEmpty() || amount <= 0) return ItemStack.EMPTY;
+                    ItemStack preview = stack.copy();
+                    preview.setCount(Math.min(stack.getCount(), amount));
+                    return preview;
+                }
                 ItemStack taken = container.removeItem(slot, amount);
-                logHandler("extract slot " + slot + " amount " + amount + (simulate ? " (sim)" : "") + " -> " + taken.getCount() + "x" + taken.getItem());
+                logHandler("extract slot " + slot + " amount " + amount + " -> " + taken.getCount() + "x" + taken.getItem());
                 return taken;
             }
 
