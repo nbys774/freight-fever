@@ -40,6 +40,19 @@ public class ConsumerBlockEntity extends BlockEntity {
         be.tick(level, pos);
     }
 
+    @Override
+    public void setRemoved() {
+        // release platform links so other consumers can claim them
+        if (level != null && !level.isClientSide()) {
+            for (BlockPos p : inPlatforms) {
+                if (level.getBlockEntity(p) instanceof PlatformBlockEntity platform) {
+                    platform.unlinkIfOwnedBy(getBlockPos());
+                }
+            }
+        }
+        super.setRemoved();
+    }
+
     private void tick(Level level, BlockPos pos) {
         Demand demand = currentDemand();
         if (demand == null) return;

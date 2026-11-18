@@ -56,6 +56,16 @@ public class IndustryBlockEntity extends BlockEntity {
         be.tick(level, pos);
     }
 
+    @Override
+    public void setRemoved() {
+        // release platform links so other industries can claim them
+        if (level != null && !level.isClientSide()) {
+            for (BlockPos p : outPlatforms) unlinkIfPresent(level, p);
+            for (BlockPos p : inPlatforms) unlinkIfPresent(level, p);
+        }
+        super.setRemoved();
+    }
+
     private void tick(Level level, BlockPos pos) {
         IndustryRecipe recipe = currentRecipe();
         if (!ticked) {

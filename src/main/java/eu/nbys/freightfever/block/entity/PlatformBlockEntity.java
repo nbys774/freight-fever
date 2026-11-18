@@ -48,15 +48,24 @@ public class PlatformBlockEntity extends BlockEntity {
         return owner.equals(linkOwner);
     }
 
-    /** Claims this platform for owner; returns false if already claimed by someone else. */
+    /** Claims this platform for owner; returns false if a live owner already claims it. */
     public boolean tryLink(BlockPos owner, String role) {
-        if (linkOwner == null || linkOwner.equals(owner)) {
-            linkOwner = owner;
-            linkRole = role;
-            setChanged();
-            return true;
+        if (linkOwner != null && !linkOwner.equals(owner)) {
+            if (isOwnerAlive()) return false;
+            FreightFever.LOGGER.debug("Platform at {} took over stale link to {}", worldPosition, linkOwner);
         }
-        return false;
+        linkOwner = owner;
+        linkRole = role;
+        setChanged();
+        return true;
+    }
+
+    /** True if the linked position still holds an owning block entity.
+     *  Unloaded chunks count as alive so live owners are never stolen from. */
+    private boolean isOwnerAlive() {
+        if (level == null || !level.hasChunkAt(linkOwner)) return true;
+        BlockEntity ownerBe = level.getBlockEntity(linkOwner);
+        return ownerBe instanceof IndustryBlockEntity || ownerBe instanceof ConsumerBlockEntity;
     }
 
     public void unlinkIfOwnedBy(BlockPos owner) {
