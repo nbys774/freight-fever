@@ -23,6 +23,8 @@ public class PlatformBlockEntity extends BlockEntity {
         }
     };
 
+    private long lastHandlerLog = 0L;
+
     /** BlockPos of the Industry/Consumer this platform is linked to, null if free. */
     private BlockPos linkOwner = null;
     /** "in" or "out" role relative to the owner. */
@@ -30,6 +32,15 @@ public class PlatformBlockEntity extends BlockEntity {
 
     public PlatformBlockEntity(BlockPos pos, BlockState state) {
         super(FreightFever.PLATFORM_BE.get(), pos, state);
+    }
+
+    /** Debug logging of capability queries (hoppers etc.), throttled to once per second. */
+    private void logHandler(String message) {
+        if (level == null) return;
+        long now = level.getGameTime();
+        if (now - lastHandlerLog < 20) return;
+        lastHandlerLog = now;
+        FreightFever.LOGGER.debug("Platform at {} capability: {}", worldPosition, message);
     }
 
     public Container getContainer() {
@@ -103,6 +114,7 @@ public class PlatformBlockEntity extends BlockEntity {
             @Override
             public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
                 if (getMode() == PlatformMode.OUT) return stack; // insertion refused
+                logHandler("insert requested " + stack.getCount() + "x" + stack.getItem() + " (slot " + slot + ")");
                 ItemStack existing = container.getItem(slot);
                 if (!existing.isEmpty() && !ItemStack.isSameItemSameComponents(existing, stack)) return stack;
                 int limit = Math.min(getSlotLimit(slot), stack.getMaxStackSize());
@@ -121,7 +133,9 @@ public class PlatformBlockEntity extends BlockEntity {
             @Override
             public ItemStack extractItem(int slot, int amount, boolean simulate) {
                 if (getMode() == PlatformMode.IN) return ItemStack.EMPTY; // extraction refused via capability
-                return container.removeItem(slot, amount);
+                ItemStack taken = container.removeItem(slot, amount);
+                logHandler("extract slot " + slot + " amount " + amount + (simulate ? " (sim)" : "") + " -> " + taken.getCount() + "x" + taken.getItem());
+                return taken;
             }
 
             @Override
