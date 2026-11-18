@@ -10,6 +10,9 @@ import eu.nbys.freightfever.data.ItemAmount;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -72,6 +75,7 @@ public class IndustryBlockEntity extends BlockEntity {
             ticked = true;
             FreightFever.LOGGER.info("Industry {} ticker online (recipe {}, factor x{}, progress {})", worldPosition,
                     recipe == null ? "none" : recipe.id().toString(), String.format("%.2f", productionFactor), progress);
+            syncToClient();
         }
 
         if (--scanCooldown <= 0) {
@@ -106,7 +110,10 @@ public class IndustryBlockEntity extends BlockEntity {
         IndustryRecipe recipe = recipeId == null ? null : FreightData.getIndustry(recipeId);
         if (recipe == null) {
             recipe = FreightData.defaultIndustry();
-            if (recipe != null) recipeId = recipe.id();
+            if (recipe != null) {
+                recipeId = recipe.id();
+                syncToClient();
+            }
         }
         return recipe;
     }
@@ -310,6 +317,26 @@ public class IndustryBlockEntity extends BlockEntity {
         this.recipeId = recipeId;
         this.progress = 0;
         setChanged();
+        syncToClient();
+    }
+
+    /** Pushes the recipe selection to clients for the wrench overlay. */
+    private void syncToClient() {
+        if (level != null && !level.isClientSide()) {
+            level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), 2);
+        }
+    }
+
+    @Override
+    public CompoundTag getUpdateTag(HolderLookup.Provider registries) {
+        CompoundTag tag = super.getUpdateTag(registries);
+        if (recipeId != null) tag.putString("RecipeId", recipeId.toString());
+        return tag;
+    }
+
+    @Override
+    public Packet<ClientGamePacketListener> getUpdatePacket() {
+        return ClientboundBlockEntityDataPacket.create(this);
     }
 
     /** Handler for automation: inputs insertable, outputs extractable. */

@@ -61,6 +61,9 @@ public class FreightFever {
     public static final DeferredItem<Item> STEEL_INGOT = ITEMS.registerSimpleItem("steel_ingot",
             new Item.Properties());
 
+    public static final DeferredItem<Item> WRENCH_ITEM = ITEMS.registerSimpleItem("wrench",
+            new Item.Properties());
+
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<IndustryBlockEntity>> INDUSTRY_BE =
             BLOCK_ENTITIES.register("industry", () -> BlockEntityType.Builder.of(IndustryBlockEntity::new, INDUSTRY.get()).build(null));
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<PlatformBlockEntity>> PLATFORM_BE =
@@ -76,6 +79,7 @@ public class FreightFever {
                 output.accept(PLATFORM_ITEM.get());
                 output.accept(CONSUMER_ITEM.get());
                 output.accept(STEEL_INGOT.get());
+                output.accept(WRENCH_ITEM.get());
             }).build());
 
     public FreightFever(IEventBus modEventBus, ModContainer modContainer) {

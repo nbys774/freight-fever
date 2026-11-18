@@ -6,6 +6,9 @@ import eu.nbys.freightfever.block.PlatformMode;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.item.ItemStack;
@@ -68,7 +71,30 @@ public class PlatformBlockEntity extends BlockEntity {
         linkOwner = owner;
         linkRole = role;
         setChanged();
+        syncToClient();
         return true;
+    }
+
+    /** Pushes the link state to clients for the wrench overlay. */
+    private void syncToClient() {
+        if (level != null && !level.isClientSide()) {
+            level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), 2);
+        }
+    }
+
+    @Override
+    public CompoundTag getUpdateTag(HolderLookup.Provider registries) {
+        CompoundTag tag = super.getUpdateTag(registries);
+        if (linkOwner != null) {
+            tag.putLong("LinkOwner", linkOwner.asLong());
+            tag.putString("LinkRole", linkRole == null ? "" : linkRole);
+        }
+        return tag;
+    }
+
+    @Override
+    public Packet<ClientGamePacketListener> getUpdatePacket() {
+        return ClientboundBlockEntityDataPacket.create(this);
     }
 
     /** True if the linked position still holds an owning block entity.
@@ -84,6 +110,7 @@ public class PlatformBlockEntity extends BlockEntity {
             linkOwner = null;
             linkRole = null;
             setChanged();
+            syncToClient();
         }
     }
 
@@ -92,6 +119,7 @@ public class PlatformBlockEntity extends BlockEntity {
         linkOwner = null;
         linkRole = null;
         setChanged();
+        syncToClient();
     }
 
     public String getLinkRole() {

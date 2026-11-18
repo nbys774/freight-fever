@@ -12,6 +12,9 @@ import eu.nbys.freightfever.data.FreightData;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -74,7 +77,10 @@ public class ConsumerBlockEntity extends BlockEntity {
         Demand demand = demandId == null ? null : FreightData.getDemand(demandId);
         if (demand == null) {
             demand = FreightData.defaultDemand();
-            if (demand != null) demandId = demand.id();
+            if (demand != null) {
+                demandId = demand.id();
+                syncToClient();
+            }
         }
         return demand;
     }
@@ -165,6 +171,26 @@ public class ConsumerBlockEntity extends BlockEntity {
         this.demandId = demandId;
         this.satisfaction.clear();
         setChanged();
+        syncToClient();
+    }
+
+    /** Pushes the demand assignment to clients for the wrench overlay. */
+    private void syncToClient() {
+        if (level != null && !level.isClientSide()) {
+            level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), 2);
+        }
+    }
+
+    @Override
+    public CompoundTag getUpdateTag(HolderLookup.Provider registries) {
+        CompoundTag tag = super.getUpdateTag(registries);
+        if (demandId != null) tag.putString("DemandId", demandId.toString());
+        return tag;
+    }
+
+    @Override
+    public Packet<ClientGamePacketListener> getUpdatePacket() {
+        return ClientboundBlockEntityDataPacket.create(this);
     }
 
     @Override

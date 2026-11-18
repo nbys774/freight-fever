@@ -4,6 +4,7 @@
   "block.freightfever.platform": "Platform",
   "block.freightfever.consumer": "Consumer",
   "item.freightfever.steel_ingot": "Steel Ingot",
+  "item.freightfever.wrench": "Freight Wrench",
   "block.freightfever.platform.mode": "Platform mode: %s",
   "block.freightfever.industry.info": "Recipe: %s | Production factor: x%s",
   "block.freightfever.consumer.info": "Demand: %s | %s"
