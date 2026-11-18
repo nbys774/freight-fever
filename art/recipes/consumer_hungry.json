@@ -1,0 +1,8 @@
+{
+  "name": "consumer_hungry",
+  "pattern": "gauge",
+  "palette": "dark_void",
+  "seed": 1006,
+  "target": "block/consumer_hungry",
+  "options": { "level": 0.15, "fill_color": "#d04040", "fill_light": "#ec6a6a" }
+}

@@ -1,0 +1,8 @@
+{
+  "name": "wrench",
+  "pattern": "item_wrench",
+  "palette": "rusted_metal",
+  "seed": 1008,
+  "target": "item/wrench",
+  "options": {}
+}

@@ -1,0 +1,43 @@
+{
+  "meta": {
+    "format_version": "4.0",
+    "model_format": "minecraft_block"
+  },
+  "name": "industry_block",
+  "format_version": "4.0",
+  "model_format": "minecraft_block",
+  "resolution": { "width": 16, "height": 16, "depth": 16 },
+  "textures": [
+    {
+      "name": "block/industry.png",
+      "source": "../../src/main/resources/assets/freightfever/textures/block/industry.png"
+    }
+  ],
+  "elements": [
+    {
+      "name": "base_plinth",
+      "from": [0, 0, 0],
+      "to": [16, 4, 16],
+      "faces": {
+        "down": { "uv": [0, 0, 16, 16], "texture": "block/industry.png" },
+        "up": { "uv": [0, 0, 16, 16], "texture": "block/industry.png" },
+        "north": { "uv": [0, 12, 16, 16], "texture": "block/industry.png" },
+        "south": { "uv": [0, 12, 16, 16], "texture": "block/industry.png" },
+        "west": { "uv": [0, 12, 16, 16], "texture": "block/industry.png" },
+        "east": { "uv": [0, 12, 16, 16], "texture": "block/industry.png" }
+      }
+    },
+    {
+      "name": "casing",
+      "from": [1, 4, 1],
+      "to": [15, 16, 15],
+      "faces": {
+        "up": { "uv": [0, 0, 16, 16], "texture": "block/industry.png" },
+        "north": { "uv": [0, 0, 16, 12], "texture": "block/industry.png" },
+        "south": { "uv": [0, 0, 16, 12], "texture": "block/industry.png" },
+        "west": { "uv": [0, 0, 16, 12], "texture": "block/industry.png" },
+        "east": { "uv": [0, 0, 16, 12], "texture": "block/industry.png" }
+      }
+    }
+  ]
+}

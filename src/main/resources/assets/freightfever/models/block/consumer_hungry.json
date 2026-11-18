@@ -1,4 +1,4 @@
 {
   "parent": "minecraft:block/cube_all",
-  "textures": { "all": "minecraft:block/redstone_block" }
+  "textures": { "all": "freightfever:block/consumer_hungry" }
 }

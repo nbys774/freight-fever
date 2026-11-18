@@ -1,0 +1,8 @@
+{
+  "name": "consumer_average",
+  "pattern": "gauge",
+  "palette": "dark_void",
+  "seed": 1005,
+  "target": "block/consumer_average",
+  "options": { "level": 0.5, "fill_color": "#e0a832", "fill_light": "#f2c95e" }
+}

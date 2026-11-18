@@ -1,0 +1,100 @@
+{
+  "industrial_metal": {
+    "base": "#8a8f98",
+    "shade": "#5d626b",
+    "light": "#b6bcc6",
+    "detail": "#3f434a",
+    "edge": "#2b2e33"
+  },
+  "rusted_metal": {
+    "base": "#9a6b4f",
+    "shade": "#6e4a34",
+    "light": "#c08a63",
+    "detail": "#54371f",
+    "edge": "#3d2817"
+  },
+  "painted_red": {
+    "base": "#a83232",
+    "shade": "#7a2323",
+    "light": "#d05050",
+    "detail": "#571818",
+    "edge": "#3d1010"
+  },
+  "painted_blue": {
+    "base": "#2f5f9e",
+    "shade": "#21436f",
+    "light": "#4d82c4",
+    "detail": "#16304f",
+    "edge": "#0f2238"
+  },
+  "painted_green": {
+    "base": "#3f8f4f",
+    "shade": "#2c6638",
+    "light": "#5cb56e",
+    "detail": "#1e4726",
+    "edge": "#143018"
+  },
+  "painted_amber": {
+    "base": "#c98a2e",
+    "shade": "#96651f",
+    "light": "#e8ae52",
+    "detail": "#6b4514",
+    "edge": "#4a2f0d"
+  },
+  "wood": {
+    "base": "#8a6844",
+    "shade": "#63482e",
+    "light": "#ab8659",
+    "detail": "#4a3520",
+    "edge": "#33240f"
+  },
+  "stone": {
+    "base": "#7d7d7d",
+    "shade": "#5a5a5a",
+    "light": "#9d9d9d",
+    "detail": "#424242",
+    "edge": "#2e2e2e"
+  },
+  "steel": {
+    "base": "#c9ced6",
+    "shade": "#9aa0ab",
+    "light": "#eef1f5",
+    "detail": "#6f757f",
+    "edge": "#4c515a"
+  },
+  "hazard": {
+    "base": "#e8c832",
+    "shade": "#b89a1e",
+    "light": "#f5dd66",
+    "detail": "#1c1c1c",
+    "edge": "#0d0d0d"
+  },
+  "gauge_green": {
+    "base": "#46c46a",
+    "shade": "#2f8f4a",
+    "light": "#74e394",
+    "detail": "#1f6333",
+    "edge": "#123f1f"
+  },
+  "gauge_amber": {
+    "base": "#e0a832",
+    "shade": "#a87c1e",
+    "light": "#f2c95e",
+    "detail": "#755412",
+    "edge": "#4a3509"
+  },
+  "gauge_red": {
+    "base": "#d04040",
+    "shade": "#9c2b2b",
+    "light": "#ec6a6a",
+    "detail": "#6e1c1c",
+    "edge": "#450f0f"
+  },
+  "dark_void": {
+    "base": "#23252b",
+    "shade": "#17181d",
+    "light": "#33363f",
+    "detail": "#0d0e12",
+    "edge": "#000000"
+  }
+}

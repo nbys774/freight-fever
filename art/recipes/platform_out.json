@@ -1,0 +1,8 @@
+{
+  "name": "platform_out",
+  "pattern": "machine_casing",
+  "palette": "painted_amber",
+  "seed": 1003,
+  "target": "block/platform_out",
+  "options": { "accent": "#e8ae52" }
+}

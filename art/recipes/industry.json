@@ -1,0 +1,8 @@
+{
+  "name": "industry",
+  "pattern": "machine_casing",
+  "palette": "industrial_metal",
+  "seed": 1001,
+  "target": "block/industry",
+  "options": { "accent": "#e8c832" }
+}

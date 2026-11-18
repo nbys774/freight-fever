@@ -1,0 +1,8 @@
+{
+  "name": "consumer_satisfied",
+  "pattern": "gauge",
+  "palette": "dark_void",
+  "seed": 1004,
+  "target": "block/consumer_satisfied",
+  "options": { "level": 0.9, "fill_color": "#46c46a", "fill_light": "#74e394" }
+}

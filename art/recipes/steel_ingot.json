@@ -1,0 +1,8 @@
+{
+  "name": "steel_ingot",
+  "pattern": "item_ingot",
+  "palette": "steel",
+  "seed": 1007,
+  "target": "item/steel_ingot",
+  "options": {}
+}

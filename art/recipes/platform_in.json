@@ -1,0 +1,8 @@
+{
+  "name": "platform_in",
+  "pattern": "machine_casing",
+  "palette": "painted_blue",
+  "seed": 1002,
+  "target": "block/platform_in",
+  "options": { "accent": "#4d82c4" }
+}

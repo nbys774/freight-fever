@@ -19,6 +19,10 @@ Roadmap: pre-alpha 1.0 (town levels, management terminal), then train/package co
 
 Author: **naebulys** — MIT license.
 
+## Art pipeline
+
+Procedural 16x16 textures and Blockbench model export: see [docs/art.md](docs/art.md). Quick start: `python3 scripts/gen_textures.py --all` regenerates every texture deterministically, `python3 scripts/blockbench_export.py --all` exports `.bbmodel` files from `art/blockbench/`.
+
 ## Testing
 
 See docs/testing.md for the full walkthrough. Quick start: scripts/run-client.sh starts a Minecraft 1.21.1 dev client with the mod loaded, scripts/run-server.sh is the headless smoke test, and scripts/build-jar.sh [mods-dir] builds the jar (optionally copying it into a mods folder).
